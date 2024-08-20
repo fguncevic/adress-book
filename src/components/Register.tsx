@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, DatePicker } from 'antd';
+export
 
 
 const Register: React.FC = () => {
@@ -23,72 +25,140 @@ const Register: React.FC = () => {
   return (
     <div>
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
+      <Form
+        name="register"
+        onFinish={handleSubmit}
+        layout="vertical"
+      >
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your email!',
+              type: 'email',
+            },
+          ]}
+        >
+          <Input
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            onChange={(e:any) => setEmail(e.target.value)}
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
+        </Form.Item>
+
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your password!',
+            },
+          ]}
+        >
+          <Input.Password
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            onChange={(e:any) => setPassword(e.target.value)}
           />
-        </div>
-        <div>
-          <label>Confirm Password:</label>
-          <input
-            type="password"
+        </Form.Item>
+
+        <Form.Item
+          label="Confirm Password"
+          name="confirmPassword"
+          dependencies={['password']}
+          rules={[
+            {
+              required: true,
+              message: 'Please confirm your password!',
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('Passwords do not match!'));
+              },
+            }),
+          ]}
+        >
+          <Input.Password
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
+            onChange={(e:any) => setConfirmPassword(e.target.value)}
           />
-        </div>
-        <div>
-          <label>Username:</label>
-          <input
-            type="userName"
+        </Form.Item>
+
+        <Form.Item
+          label="Username"
+          name="username"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your username!',
+            },
+          ]}
+        >
+          <Input
             value={userName}
-            onChange={(e) => setUsertName(e.target.value)}
-            required
+            onChange={(e:any) => setUsertName(e.target.value)}
           />
-        </div>
-        <div>
-          <label>First name:</label>
-          <input
-            type="firstName"
+        </Form.Item>
+
+        <Form.Item
+          label="First Name"
+          name="firstName"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your first name!',
+            },
+          ]}
+        >
+          <Input
             value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
+            onChange={(e:any) => setFirstName(e.target.value)}
           />
-        </div>
-        <div>
-          <label>Last name:</label>
-          <input
-            type="lastName"
+        </Form.Item>
+
+        <Form.Item
+          label="Last Name"
+          name="lastName"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your last name!',
+            },
+          ]}
+        >
+          <Input
             value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
+            onChange={(e:any) => setLastName(e.target.value)}
           />
-        </div>
-        <div>
-          <label>Date of birth:</label>
-          <input
-            type="date"
+        </Form.Item>
+
+        <Form.Item
+          label="Date of Birth"
+          name="dateOfBirth"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your date of birth!',
+            },
+          ]}
+        >
+          <DatePicker
             value={dateOfBirth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
-            required
+            onChange={(date) => setDateOfBirth(date)}
+            format="YYYY-MM-DD"
           />
-        </div>
-        <button type="submit">Register</button>
-      </form>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Register
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

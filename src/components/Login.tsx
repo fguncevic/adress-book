@@ -1,38 +1,62 @@
 import React, { useState } from 'react';
+import { Form, Input, Button } from 'antd';
+export
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     console.log('Login poslan', { email, password });
   };
 
   return (
     <div>
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
+      <Form
+        name="login"
+        onFinish={handleSubmit}
+        layout="vertical"
+      >
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your email!',
+              type: 'email',
+            },
+          ]}
+        >
+          <Input
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            onChange={(e:any) => setEmail(e.target.value)}
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
+        </Form.Item>
+        
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your password!',
+            },
+          ]}
+        >
+          <Input.Password
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            onChange={(e:any) => setPassword(e.target.value)}
           />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+        </Form.Item>
+        
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Login
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };
