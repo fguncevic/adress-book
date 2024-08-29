@@ -1,19 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import RegisterForm from "../components/register/RegisterForm";
 
 const Register = () => {
-  const [formValues, setFormValues] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    username: "",
-    firstname: "",
-    lastname: "",
-    dateOfBirth: null,
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (values: any) => {
     const {
       email,
       password,
@@ -22,14 +11,14 @@ const Register = () => {
       firstname,
       lastname,
       dateOfBirth,
-    } = formValues;
+    } = values;
 
     if (password !== confirmPassword) {
-      alert("Sifre nisu iste");
+      alert("Passwords don't match");
       return;
     }
 
-    console.log("Registriran s", {
+    console.log("Registered: ", {
       email,
       password,
       username,
@@ -39,23 +28,10 @@ const Register = () => {
     });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValues({ ...formValues, [e.target.name]: e.target.value });
-  };
-
-  const handleDateChange = (date: any) => {
-    setFormValues({ ...formValues, dateOfBirth: date });
-  };
-
   return (
     <div>
       <h2>Register</h2>
-      <RegisterForm
-        formValues={formValues}
-        handleInputChange={handleInputChange}
-        handleDateChange={handleDateChange}
-        handleSubmit={handleSubmit}
-      />
+      <RegisterForm handleSubmit={handleSubmit} />
     </div>
   );
 };

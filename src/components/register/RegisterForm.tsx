@@ -1,139 +1,104 @@
 import React from "react";
 import { Form, Input, Button, DatePicker } from "antd";
+import { Link } from "react-router-dom";
 
-const RegisterForm: React.FC<{
-  formValues: {
-    email: string;
-    password: string;
-    confirmPassword: string;
-    username: string;
-    firstname: string;
-    lastname: string;
-    dateOfBirth: any;
-  };
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDateChange: (date: any) => void;
-  handleSubmit: (e: React.FormEvent) => void;
-}> = ({ formValues, handleInputChange, handleDateChange, handleSubmit }) => {
+const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handleSubmit }) => {
   return (
-    <Form name="register" onFinish={handleSubmit} layout="vertical">
+    <Form
+      name="register"
+      onFinish={handleSubmit}
+      layout="vertical"
+      initialValues={{
+        email: "",
+        password: "",
+        confirmPassword: "",
+        username: "",
+        firstname: "",
+        lastname: "",
+        dateOfBirth: null,
+      }}
+    >
       <Form.Item
         label="Email"
+        name="email"
         rules={[
-          {
-            required: true,
-            message: "Please enter your email!",
-            type: "email",
-          },
+          { required: true, message: "Please enter your email!" },
+          { type: "email", message: "Please enter a valid email!" },
         ]}
       >
-        <Input
-          value={formValues.email}
-          name="email"
-          onChange={handleInputChange}
-        />
+        <Input />
       </Form.Item>
 
       <Form.Item
         label="Password"
+        name="password"
         rules={[
-          {
-            required: true,
-            message: "Please enter your password!",
-          },
+          { required: true, message: "Please enter your password!" },
         ]}
       >
-        <Input.Password
-          value={formValues.password}
-          name="password"
-          onChange={handleInputChange}
-        />
+        <Input.Password />
       </Form.Item>
 
       <Form.Item
         label="Confirm Password"
-        key="confirmPassword"
+        name="confirmPassword"
+        dependencies={['password']}
         rules={[
-          {
-            required: true,
-            message: "Please confirm your password!",
-          },
+          { required: true, message: "Please confirm your password!" },
+         
         ]}
+        
       >
-        <Input.Password
-          value={formValues.confirmPassword}
-          name="confirmPassword"
-          onChange={handleInputChange}
-        />
+        
+        <Input.Password />
       </Form.Item>
 
       <Form.Item
         label="Username"
+        name="username"
         rules={[
-          {
-            required: true,
-            message: "Please enter your username!",
-          },
+          { required: true, message: "Please enter your username!" },
         ]}
       >
-        <Input
-          value={formValues.username}
-          name="username"
-          onChange={handleInputChange}
-        />
+        <Input />
       </Form.Item>
 
       <Form.Item
         label="First Name"
+        name="firstname"
         rules={[
-          {
-            required: true,
-            message: "Please enter your first name!",
-          },
+          { required: true, message: "Please enter your first name!" },
         ]}
       >
-        <Input
-          value={formValues.firstname}
-          name="firstname"
-          onChange={handleInputChange}
-        />
+        <Input />
       </Form.Item>
 
       <Form.Item
         label="Last Name"
+        name="lastname"
         rules={[
-          {
-            required: true,
-            message: "Please enter your last name!",
-          },
+          { required: true, message: "Please enter your last name!" },
         ]}
       >
-        <Input
-          value={formValues.lastname}
-          name="lastname"
-          onChange={handleInputChange}
-        />
+        <Input />
       </Form.Item>
 
       <Form.Item
         label="Date of Birth"
+        name="dateOfBirth"
         rules={[
-          {
-            required: true,
-            message: "Please enter your date of birth!",
-          },
+          { required: true, message: "Please select your date of birth!" },
         ]}
       >
-        <DatePicker
-          value={formValues.dateOfBirth}
-          onChange={handleDateChange}
-          format="YYYY-MM-DD"
-        />
+        <DatePicker format="YYYY-MM-DD" />
       </Form.Item>
 
       <Form.Item>
         <Button type="primary" htmlType="submit">
           Register
+        </Button>
+        <Button>
+          <Link to="/login">Back</Link>
         </Button>
       </Form.Item>
     </Form>

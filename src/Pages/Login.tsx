@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LoginForm from '../components/login/LoginForm';
+import { Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [formValues, setFormValues] = useState({
@@ -13,7 +14,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = () => {
     const { email, password } = formValues;
-    console.log('Login poslan', { email, password });
+    console.log('Login sent', { email, password });
   };
 
   return (
@@ -24,6 +25,7 @@ const Login: React.FC = () => {
       handleInputChange={handleInputChange}  
       handleSubmit={handleSubmit}      
     />
+     <p>Don't have an account? <Link to="/register">Register here</Link></p>
   </div>
   );
 };
