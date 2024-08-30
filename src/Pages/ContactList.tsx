@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Col, Row, Button, Modal, Input, Form, DatePicker } from 'antd';
+import { Card, Col, Row, Button, Modal, Input, Form, DatePicker, Radio } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
@@ -39,7 +39,7 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
     setIsEditing(true);
     editForm.setFieldsValue({
       ...contact,
-      dob: contact.dob ? moment(contact.dob) : null
+      dob: contact.dob ? moment(contact.dob) : null,
     });
   };
 
@@ -49,22 +49,26 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
       content: 'Do you really want to delete this contact?',
       okText: 'Yes',
       cancelText: 'No',
-      onOk: () => onDeleteContact(id),
+      onOk: () => {
+        onDeleteContact(id);
+      },
     });
   };
 
   const handleSaveEdit = () => {
-    editForm.validateFields()
-      .then(values => {
-        const updatedContact = {
+    editForm
+      .validateFields()
+      .then((values) => {
+        const updatedContact: Contact = {
           ...currentEditingContact!,
           ...values,
-          dob: values.dob ? values.dob.format('YYYY-MM-DD') : null
+          dob: values.dob ? values.dob.format('YYYY-MM-DD') : null,
         };
         onEditContact(updatedContact);
         setIsEditing(false);
+        setCurrentEditingContact(null);
       })
-      .catch(info => {
+      .catch((info) => {
         console.log('Validation Failed:', info);
       });
   };
@@ -77,28 +81,39 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
             <Card style={{ marginBottom: 16 }}>
               <Row gutter={16} align="middle">
                 <Col xs={6} sm={4} md={3}>
-                  <img src={contact.image} alt={`${contact.name} ${contact.lastName}`} style={{ width: "100%" }} />
+                  <img
+                    src={contact.image}
+                    alt={`${contact.name} ${contact.lastName}`}
+                    style={{ width: '100%' }}
+                  />
                 </Col>
                 <Col xs={18} sm={16} md={18}>
-                  <h3>{contact.name} {contact.lastName}</h3>
-                  <p>{contact.city}, {contact.postCode}</p>
+                  <h3>
+                    {contact.name} {contact.lastName}
+                  </h3>
+                  <p>
+                    {contact.city}, {contact.postCode}
+                  </p>
                   {expandedContact === contact.id && (
                     <div>
                       <p>Age: {contact.age}</p>
                       <p>Gender: {contact.gender}</p>
-                      <p>DOB: {contact.dob ? moment(contact.dob).format('YYYY-MM-DD') : "N/A"}</p>
+                      <p>DOB: {contact.dob ? moment(contact.dob).format('YYYY-MM-DD') : 'N/A'}</p>
                       <p>Street: {contact.street}</p>
                       <p>Email: {contact.email}</p>
                       <p>Phone: {contact.phoneNumber}</p>
                     </div>
                   )}
                 </Col>
-                <Col xs={24} sm={4} md={3} style={{ textAlign: "right" }}>
+                <Col xs={24} sm={4} md={3} style={{ textAlign: 'right' }}>
                   <Button type="link" onClick={() => handleExpand(contact.id)}>
-                    {expandedContact === contact.id ? <UpOutlined /> : <DownOutlined />} {expandedContact === contact.id ? "Collapse" : "Expand"}
+                    {expandedContact === contact.id ? <UpOutlined /> : <DownOutlined />}{' '}
+                    {expandedContact === contact.id ? 'Collapse' : 'Expand'}
                   </Button>
                   <Button onClick={() => handleEdit(contact)}>Edit</Button>
-                  <Button danger onClick={() => handleDelete(contact.id)}>Delete</Button>
+                  <Button danger onClick={() => handleDelete(contact.id)}>
+                    Delete
+                  </Button>
                 </Col>
               </Row>
             </Card>
@@ -110,71 +125,62 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
         title="Edit Contact"
         visible={isEditing}
         onOk={handleSaveEdit}
-        onCancel={() => setIsEditing(false)}
+        onCancel={() => {
+          setIsEditing(false);
+          setCurrentEditingContact(null);
+        }}
       >
         <Form form={editForm} layout="vertical">
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: "Please enter your name!" }]}
+            rules={[{ required: true, message: 'Please enter your name!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Last Name"
             name="lastName"
-            rules={[{ required: true, message: "Please enter your last name!" }]}
+            rules={[{ required: true, message: 'Please enter your last name!' }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Age"
-            name="age"
-          >
+          <Form.Item label="Age" name="age">
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Gender"
-            name="gender"
-          >
-            <Input />
+          <Form.Item label="Gender" name="gender">
+            <Radio.Group>
+              <Radio value="Male">Male</Radio>
+              <Radio value="Female">Female</Radio>
+            </Radio.Group>
           </Form.Item>
-          <Form.Item
-            label="Date of Birth"
-            name="dob"
-          >
+          <Form.Item label="Date of Birth" name="dob">
             <DatePicker />
           </Form.Item>
           <Form.Item
             label="City"
             name="city"
-            rules={[{ required: true, message: "Please enter your city!" }]}
+            rules={[{ required: true, message: 'Please enter your city!' }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Street"
-            name="street"
-          >
+          <Form.Item label="Street" name="street">
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Post Code"
-            name="postCode"
-          >
+          <Form.Item label="Post Code" name="postCode">
             <Input />
           </Form.Item>
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: "Please enter your email!" }]}
+            rules={[{ required: true, message: 'Please enter your email!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Phone Number"
             name="phoneNumber"
-            rules={[{ required: true, message: "Please enter your phone number!" }]}
+            rules={[{ required: true, message: 'Please enter your phone number!' }]}
           >
             <Input />
           </Form.Item>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, DatePicker, Input, message, Form, Row, Col } from "antd";
+import { Button, DatePicker, Input, message, Form, Row, Col, Radio } from "antd";
 
 interface Contact {
   image: string;
@@ -70,7 +70,10 @@ const Addressbook: React.FC<{ onAddContact: (contact: Contact) => void }> = ({ o
             label="Gender"
             name="gender"
           >
-            <Input />
+            <Radio.Group>
+<Radio value="Male">Male</Radio>
+<Radio value="Female">Female</Radio>
+            </Radio.Group>
           </Form.Item>
         </Col>
       </Row>

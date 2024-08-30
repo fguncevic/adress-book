@@ -2,7 +2,9 @@ import React from "react";
 import { Form, Input, Button, DatePicker } from "antd";
 import { Link } from "react-router-dom";
 
-const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handleSubmit }) => {
+const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({
+  handleSubmit,
+}) => {
   return (
     <Form
       name="register"
@@ -33,7 +35,18 @@ const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handl
         label="Password"
         name="password"
         rules={[
-          { required: true, message: "Please enter your password!" },
+          {
+            required: true,
+            message: "Please enter your password!",
+          },
+          {
+            min: 6,
+            message: "Password must be at least 6 characters long!",
+          },
+          {
+            pattern: /(?=.*\d)/,
+            message: "Password must contain at least one number!",
+          },
         ]}
       >
         <Input.Password />
@@ -42,14 +55,22 @@ const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handl
       <Form.Item
         label="Confirm Password"
         name="confirmPassword"
-        dependencies={['password']}
+        dependencies={["password"]}
         rules={[
-          { required: true, message: "Please confirm your password!" },
-         
+          {
+            required: true,
+            message: "Please confirm your password!",
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue("password") === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject("Passwords don't match");
+            },
+          }),
         ]}
-        
       >
-        
         <Input.Password />
       </Form.Item>
 
@@ -57,7 +78,14 @@ const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handl
         label="Username"
         name="username"
         rules={[
-          { required: true, message: "Please enter your username!" },
+          {
+            required: true,
+            message: "Please enter your username!",
+          },
+          {
+            min: 5,
+            message: "Username must be at least 5 characters long!",
+          },
         ]}
       >
         <Input />
@@ -67,7 +95,14 @@ const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handl
         label="First Name"
         name="firstname"
         rules={[
-          { required: true, message: "Please enter your first name!" },
+          {
+            required: true,
+            message: "Please enter your first name!",
+          },
+          {
+            min: 3,
+            message: "First name should have atleast 3 letters!",
+          },
         ]}
       >
         <Input />
@@ -77,7 +112,14 @@ const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handl
         label="Last Name"
         name="lastname"
         rules={[
-          { required: true, message: "Please enter your last name!" },
+          {
+            required: true,
+            message: "Please enter your last name!",
+          },
+          {
+            min: 3,
+            message: "Last name should have atleast 3 letters!",
+          },
         ]}
       >
         <Input />
@@ -87,7 +129,10 @@ const RegisterForm: React.FC<{ handleSubmit: (values: any) => void }> = ({ handl
         label="Date of Birth"
         name="dateOfBirth"
         rules={[
-          { required: true, message: "Please select your date of birth!" },
+          {
+            required: true,
+            message: "Please select your date of birth!",
+          },
         ]}
       >
         <DatePicker format="YYYY-MM-DD" />
