@@ -1,90 +1,39 @@
-import React, { useState } from 'react';
-import { Card, Col, Row, Button, Modal, Input, Form, DatePicker, Radio } from 'antd';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
-import moment from 'moment';
+import React from "react";
+import { Col, Row, Button, Modal, Input, Form, DatePicker, Radio } from "antd";
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import moment from "moment";
+import Card from "antd/es/card/Card";
+import { useContactList } from "../hooks/useContactList";
+import { ContactListProps } from "../types";
 
-interface Contact {
-  id: number;
-  image: string;
-  name: string;
-  lastName: string;
-  city: string;
-  postCode: string;
-  age?: string;
-  gender?: string;
-  dob?: any;
-  street?: string;
-  email?: string;
-  phoneNumber?: string;
-}
-
-interface ContactListProps {
-  contacts: Contact[];
-  onEditContact: (contact: Contact) => void;
-  onDeleteContact: (id: number) => void;
-}
-
-const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDeleteContact }) => {
-  const [expandedContact, setExpandedContact] = useState<number | null>(null);
-  const [editForm] = Form.useForm();
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentEditingContact, setCurrentEditingContact] = useState<Contact | null>(null);
-
-  const handleExpand = (id: number) => {
-    setExpandedContact(expandedContact === id ? null : id);
-  };
-
-  const handleEdit = (contact: Contact) => {
-    setCurrentEditingContact(contact);
-    setIsEditing(true);
-    editForm.setFieldsValue({
-      ...contact,
-      dob: contact.dob ? moment(contact.dob) : null,
-    });
-  };
-
-  const handleDelete = (id: number) => {
-    Modal.confirm({
-      title: 'Are you sure?',
-      content: 'Do you really want to delete this contact?',
-      okText: 'Yes',
-      cancelText: 'No',
-      onOk: () => {
-        onDeleteContact(id);
-      },
-    });
-  };
-
-  const handleSaveEdit = () => {
-    editForm
-      .validateFields()
-      .then((values) => {
-        const updatedContact: Contact = {
-          ...currentEditingContact!,
-          ...values,
-          dob: values.dob ? values.dob.format('YYYY-MM-DD') : null,
-        };
-        onEditContact(updatedContact);
-        setIsEditing(false);
-        setCurrentEditingContact(null);
-      })
-      .catch((info) => {
-        console.log('Validation Failed:', info);
-      });
-  };
-
+const ContactList: React.FC<ContactListProps> = ({
+  contacts,
+  onEditContact,
+  onDeleteContact,
+}) => {
+  const {
+    handleEdit,
+    handleExpand,
+    isEditing,
+    handleSaveEdit,
+    handleDelete,
+    expandedContact,
+    setIsEditing,
+    setCurrentEditingContact,
+    editForm,
+  } = useContactList(onEditContact, onDeleteContact);
   return (
     <>
-      <Row gutter={[16, 16]}>
+      <Row justify="center" align="middle" gutter={[16, 16]}>
         {contacts.map((contact) => (
-          <Col key={contact.id} xs={24}>
+          <Col key={contact.id} xs={13}>
             <Card style={{ marginBottom: 16 }}>
               <Row gutter={16} align="middle">
                 <Col xs={6} sm={4} md={3}>
                   <img
                     src={contact.image}
                     alt={`${contact.name} ${contact.lastName}`}
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                   />
                 </Col>
                 <Col xs={18} sm={16} md={18}>
@@ -98,19 +47,33 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
                     <div>
                       <p>Age: {contact.age}</p>
                       <p>Gender: {contact.gender}</p>
-                      <p>DOB: {contact.dob ? moment(contact.dob).format('YYYY-MM-DD') : 'N/A'}</p>
+                      <p>
+                        DOB:
+                        {contact.dob
+                          ? moment(contact.dob).format("YYYY-MM-DD")
+                          : "N/A"}
+                      </p>
                       <p>Street: {contact.street}</p>
                       <p>Email: {contact.email}</p>
                       <p>Phone: {contact.phoneNumber}</p>
                     </div>
                   )}
                 </Col>
-                <Col xs={24} sm={4} md={3} style={{ textAlign: 'right' }}>
+
+                <Col xs={24} sm={4} md={3}>
                   <Button type="link" onClick={() => handleExpand(contact.id)}>
-                    {expandedContact === contact.id ? <UpOutlined /> : <DownOutlined />}{' '}
-                    {expandedContact === contact.id ? 'Collapse' : 'Expand'}
+                    {expandedContact === contact.id ? (
+                      <UpOutlined />
+                    ) : (
+                      <DownOutlined />
+                    )}
+                    {expandedContact === contact.id ? "Collapse" : "Expand"}
                   </Button>
+                </Col>
+                <Col>
                   <Button onClick={() => handleEdit(contact)}>Edit</Button>
+                </Col>
+                <Col>
                   <Button danger onClick={() => handleDelete(contact.id)}>
                     Delete
                   </Button>
@@ -134,14 +97,16 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
           <Form.Item
             label="Name"
             name="name"
-            rules={[{ required: true, message: 'Please enter your name!' }]}
+            rules={[{ required: true, message: "Please enter your name!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Last Name"
             name="lastName"
-            rules={[{ required: true, message: 'Please enter your last name!' }]}
+            rules={[
+              { required: true, message: "Please enter your last name!" },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -160,7 +125,7 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
           <Form.Item
             label="City"
             name="city"
-            rules={[{ required: true, message: 'Please enter your city!' }]}
+            rules={[{ required: true, message: "Please enter your city!" }]}
           >
             <Input />
           </Form.Item>
@@ -173,14 +138,16 @@ const ContactList: React.FC<ContactListProps> = ({ contacts, onEditContact, onDe
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: 'Please enter your email!' }]}
+            rules={[{ required: true, message: "Please enter your email!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Phone Number"
             name="phoneNumber"
-            rules={[{ required: true, message: 'Please enter your phone number!' }]}
+            rules={[
+              { required: true, message: "Please enter your phone number!" },
+            ]}
           >
             <Input />
           </Form.Item>
